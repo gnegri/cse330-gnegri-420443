@@ -11,21 +11,23 @@
     
     $a = (double) $_POST['a'];
     $b = (double) $_POST['b'];
-    $do = $_POST['do'];
-    
+    $do = isset($_POST['do']) ? $_POST['do'] : 'none';
+	    
     switch($do) {
-        case "add"
+    case "add":
             echo $a+$b;
             break;
-        case "subtract"
+    case "subtract":
             echo $a-$b;
             break;
-        case "mult"
+    case "mult":
             echo $a*$b;
             break;
-        case "div"
+    case "div":
             echo $a/$b;
-            break;
+	    break;
+    case "none":
+	echo htmlentities("Please select a function");
     }
     
 ?>
