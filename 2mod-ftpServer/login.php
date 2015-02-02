@@ -17,6 +17,7 @@
             
             if(strpos($USERS, $_SESSION['user']) === true) {
                 file_put_contents($USERFILE, $_SESSION['user']);
+                mkdir("./".$_SESSION['user']);
                 echo "You are now signed up."; }
             else { echo "Welcome back!"; }
         ?>
