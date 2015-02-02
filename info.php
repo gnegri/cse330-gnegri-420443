@@ -8,19 +8,6 @@
 <body>
     <p>
 <?php
-
-    function add($x=0, $y=0){
-        return $x+$y;
-    }
-    function subtract($x=0, $y=0){
-        return $x-$y;
-    }
-    function mult($x=1, $y=1){
-        return $x*$y;
-    }
-    function div($x=1, $y=1){
-        return $x/$y;
-    }
     
     $a = (double) $_POST['a'];
     $b = (double) $_POST['b'];

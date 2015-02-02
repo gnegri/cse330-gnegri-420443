@@ -7,15 +7,11 @@
 
 <body>
     
-    <form action="info.php" method="POST">
+    <form method="POST">
     <p>
         <label for="a">X:</label>
         <input type="number" name="a" id="a" />
     </p>   
-    <p>
-        <label for="b">Y:</label>
-        <input type="number" name="b" id="b" />
-    </p>
     
     <p>
         <input type="radio" name="do" value="add" id="add" />
@@ -29,12 +25,39 @@
     </p>
     
     <p>
-        <input type="submit" value="Send" />
+        <label for="b">Y:</label>
+        <input type="number" name="b" id="b" />
+    </p>
+
+    <p>
         <input type="reset" />
     </p>
     
     </form>
 
+    <?php
+    if(isset($_POST['a']) && isset($_POST['b']) && isset($_POST['do'])) {
+        $a = (double) $_POST['a'];
+        $b = (double) $_POST['b'];
+        $action = $_POST['do'];
+        
+        switch($action) {
+            case "add"
+                echo add($a,$b);
+                break;
+            case "subtract"
+                echo subtract($a,$b);
+                break;
+            case "mult"
+                echo mult($a,$b);
+                break;
+            case "div"
+                echo div($a,$b);
+                break;
+        }
+    }
+    
+?>
     
 </body>
 </html>
