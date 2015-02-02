@@ -11,20 +11,20 @@
     
     $a = (double) $_POST['a'];
     $b = (double) $_POST['b'];
-    $action = $_POST['do'];
+    $do = $_POST['do'];
     
-    switch($action) {
+    switch($do) {
         case "add"
-            echo add($a,$b);
+            echo $a+$b;
             break;
         case "subtract"
-            echo subtract($a,$b);
+            echo $a-$b;
             break;
         case "mult"
-            echo mult($a,$b);
+            echo $a*$b;
             break;
         case "div"
-            echo div($a,$b);
+            echo $a/$b;
             break;
     }
     
