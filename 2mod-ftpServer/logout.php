@@ -1,5 +1,5 @@
 <?php
-    session_start
+    session_start();
 ?>
 <!DOCTYPE html>
 
@@ -10,7 +10,8 @@
 
 <body>
     <p>
-        <?php
+	<?php
+		echo "You are now logged out.";
             session_destroy();
         ?>
     </p> 
