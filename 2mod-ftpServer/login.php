@@ -13,35 +13,46 @@
         <?php
             $USERFILE = '/srv/2usr/users.txt';
             $USERS = file_get_contents($USERFILE);
-            $_SESSION['user'] = isset($_POST['id']) ? $_POST['id'] : 'default';
-            
-            if(strpos($USERS, $_SESSION['user']) === true) {
-                echo "Welcome back!"; }
-            else {
+            $_SESSION['user'] = $_POST['id']."dir";
+	    $pos = strpos($USERS, $_SESSION['user']);
+
+            if($pos === false) {
                 file_put_contents($USERFILE, $_SESSION['user']);
                 mkdir("./".$_SESSION['user']);
                 fopen("./".$_SESSION['user']."/"."Welcome!.TXT","w");
-                echo "You are now signed up."; }
+		echo "You are now signed up."; }
+	    else {
+		echo "Welcome back!"; }
         ?>
     </p>
     
     <p>
         <header>Your Files</header>
         <?php
-            $_SESSION['files'] = scandir("./".$_SESSION['user']);
-            print_r($_SESSION['files']);
+	    $_SESSION['files'] = scandir("./".$_SESSION['user']);
+	    
+	    foreach ($_SESSION['files'] as $value) {
+		    echo $value;
+		    echo "<br>";
+		    $path = "./".$_SESSION['user']."/".$value;
+		    
+	    }
+		    
         ?>
     </p>
     
     <p>
         <header>Upload</header>
-        
-    </p>
+	<form action="upload.php" method="POST">
+		<p>
+			<label for="upl">Select a file</label>
+			<input type="file" name="fileUp" id="fileup">
+			<input type="submit" value="Upload" name="submit">
+    		</p>
         
     <form action="logout.php" method="POST">
 	<p>
-		<label for="logout">Log Out</label>
-            <input type="submit" name="logout" />
+            <input type="submit" name="logout" value="Log Out"/>
         </p>
     </form>
 </body>
