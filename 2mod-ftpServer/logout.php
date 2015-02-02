@@ -10,17 +10,13 @@
 </head>
 
 <body>
-    <p>
-	<?php
-	    echo "You are now logged out.";
-            session_destroy();
-        ?>
-    </p>
+    <?php
+	echo "You are now logged out.";
+	session_destroy();
+    ?>
     
-    <p>
-        <form action="login.html">
-            <input type="submit" value="Back">
-        </form>
-    </p>
+    <form action="login.html">
+	<input type="submit" value="Back">
+    </form>
 </body>
 </html>

@@ -17,12 +17,10 @@
         echo $_POST['filedel']." deleted"
     ?>
     
-    <p>
-        <form action="login.php" method="POST">
-            <input type="hidden" name="id" value="<?php echo $idtmp ?>" />
-            <input type="submit" value="Back" />
-        </form>
-    </p>
-    
+    <form action="login.php" method="POST">
+        <input type="hidden" name="id" value="<?php echo $idtmp ?>" />
+        <input type="submit" value="Back" />
+    </form>
+        
 </body>
 </html>

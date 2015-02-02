@@ -10,28 +10,24 @@
 </head>
 
 <body>
-    <p>
-        <?php
-            $idtmp = str_replace("dir","",$_SESSION['user']);
-            $dest = str_replace(" ","_",'/srv/2usr/'.$_SESSION['user'].'/'.basename($_FILES['fileup']['name']));
-            if(!file_exists($dest)) {
-                if(move_uploaded_file($_FILES['fileup']['tmp_name'], $dest)) {
-                    echo "File upload successful!";
-                } else {
-                    echo "Sorry, an error occurred: Upload failed";
-                }
+    <?php
+        $idtmp = str_replace("dir","",$_SESSION['user']);
+        $dest = str_replace(" ","_",'/srv/2usr/'.$_SESSION['user'].'/'.basename($_FILES['fileup']['name']));
+        if(!file_exists($dest)) {
+            if(move_uploaded_file($_FILES['fileup']['tmp_name'], $dest)) {
+                echo "File upload successful!";
             } else {
-                echo "Sorry, an error occurred: File already in file system";
+                echo "Sorry, an error occurred: Upload failed";
             }
-        ?>
-    </p>
+        } else {
+            echo "Sorry, an error occurred: File already in file system";
+        }
+    ?>
     
-    <p>
-        <form action="login.php" method="POST">
-            <input type="hidden" name="id" value="<?php echo $idtmp ?>">
-            <input type="submit" value="Back">
-        </form>
-    </p>
+    <form action="login.php" method="POST">
+        <input type="hidden" name="id" value="<?php echo $idtmp ?>">
+        <input type="submit" value="Back">
+    </form>
         
 </body>
 </html>
