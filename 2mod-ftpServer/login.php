@@ -16,10 +16,12 @@
             $_SESSION['user'] = isset($_POST['id']) ? $_POST['id'] : 'default';
             
             if(strpos($USERS, $_SESSION['user']) === true) {
+                echo "Welcome back!"; }
+            else {
                 file_put_contents($USERFILE, $_SESSION['user']);
                 mkdir("./".$_SESSION['user']);
+                fopen("./".$_SESSION['user']."Welcome!.TXT","w");
                 echo "You are now signed up."; }
-            else { echo "Welcome back!"; }
         ?>
     </p>
     
