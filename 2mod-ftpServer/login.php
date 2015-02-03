@@ -27,10 +27,12 @@
 
         if($pos === false) {
             $stream=fopen($USERFILE,"a");
-            fwrite($stream, $_SESSION['user']);
+            fwrite($stream, " ".$_SESSION['user']);
             fclose($stream);
-            mkdir('/srv/2usr/'.$_SESSION['user']);
-            fopen('/srv/2usr/'.$_SESSION['user'].'/'.'welcome.TXT','w');
+            if(!file_exists('/srv/2usr/'.$_SESSION['user'])) {
+                mkdir('/srv/2usr/'.$_SESSION['user']);
+                fopen('/srv/2usr/'.$_SESSION['user'].'/'.'welcome.TXT','w');
+            }
             echo "You are now signed up."; }
         else {
             echo "Welcome back!"; }
@@ -52,6 +54,10 @@
                     <input type="hidden" value='.$value.' name="filedown" />
                     <input type="submit" value="Download" />
                 </form>';
+            echo '<form action="send.php" method="POST">
+                <input type="hidden" value='.$value.' name="filesend" />
+                <input type="submit" value="Send" />
+            </form>';
             echo '<form action="delete.php" method="POST">
                     <input type="hidden" value='.$value.' name="filedel" />
                     <input type="submit" value="Delete" />
@@ -59,7 +65,7 @@
          }
     ?>
     
-    <form action="upload.php" method="POST"  enctype="multipart/form-data">
+    <form action="upload.php" method="POST" enctype="multipart/form-data">
             <label for="fileup"><strong>Upload:</strong></label><br>
             <input type="file" name="fileup" id="fileup" />
             <input type="submit" value="Upload" name="submit" />
@@ -68,6 +74,13 @@
     <form action="logout.php" method="POST">
         <p>
             <input type="submit" value="Log Out" name="logout" />
+        </p>
+    </form>
+    
+    <form action="deleteme.php" method="POST">
+        <p>
+            <input type="hidden" value='.$USERFILE.' name="delme" />
+            <input type="submit" value="Delete Me" />
         </p>
     </form>
     
