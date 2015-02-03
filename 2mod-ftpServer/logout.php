@@ -5,15 +5,18 @@
 
 <html>
 <head>
+    <meta charset="utf-8" />
     <title>Logged Out</title>
 </head>
 
 <body>
-    <p>
-	<?php
-		echo "You are now logged out.";
-            session_destroy();
-        ?>
-    </p> 
+    <?php
+	echo "You are now logged out.";
+	session_destroy();
+    ?>
+    
+    <form action="login.html">
+	<input type="submit" value="Back">
+    </form>
 </body>
 </html>
