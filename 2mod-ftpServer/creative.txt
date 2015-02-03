@@ -1,0 +1,9 @@
+Grant Negri, 420443
+Ian Sekiguchi
+
+ec2 instance
+    http://ec2-54-165-152-47.compute-1.amazonaws.com/cse330-gnegri-420443/2mod-ftpServer/login.html
+
+Creatvive portion
+    1. Gave users the option to delete themselves from the user table.
+    2. Allowed users to send files to each other.
