@@ -9,8 +9,8 @@
     <p>
         <?php
             
-            $a = (double) $_POST['a'];
-            $b = (double) $_POST['b'];
+            $a = (float) $_POST['a'];
+            $b = (float) $_POST['b'];
             $do = isset($_POST['do']) ? $_POST['do'] : 'none';
                     
             switch($do) {
