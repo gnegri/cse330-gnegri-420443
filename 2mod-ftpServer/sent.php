@@ -19,17 +19,34 @@
         $dest = '/srv/2usr/'.$_POST['target'].'dir/'.$FILE;
         $isin = strpos($USERS, $_POST['target'].'dir');
         
-        if($isin === false) {
-            echo "Not a valid user";
-        } else {
-            copy($src, $dest);
-            echo "File copied to ".$_POST['target'];
+        if($_POST['target'] == $idtmp) {
+            echo "You can't send a file to yourself.<br><br>";
+        } else {        
+            if($isin === false) {
+                echo $_POST['target']." is not a valid user.<br><br>";
+            } else {
+                if(file_exists($dest)) {
+                    echo $_POST['target']." already has a copy of that file.<br><br>";
+                } else {
+                    copy($src, $dest);
+                    echo "File copied to ".$_POST['target'].".<br><br>";
+                }
+            }
         }
     ?>
     
+    <form action="send.php" method="POST">
+        <p>
+            <input type="hidden" value="<?php echo $FILE ?>" name="filesend" />
+            <input type="submit" value="Send to Another User" />
+        </p>
+    </form>
+    
     <form action="login.php" method="POST">
-        <input type="hidden" name="id" value="<?php echo $idtmp ?>">
-        <input type="submit" value="Back">
+        <p>
+            <input type="hidden" name="id" value="<?php echo $idtmp ?>">
+            <input type="submit" value="Back to Main">
+        </p>
     </form>
     
 </body>

@@ -19,9 +19,10 @@
         <Strong>File: <?php echo $file ?></Strong>
     </p>
     <form action="sent.php" method="POST">
-        <label for="target">Send To:</label>
+        <label for="target">Send To:</label><br>
         <input type="hidden" name="send" value="<?php echo $file ?>" />
         <input type="text" name="target" id="target" />
+        <input type="submit" value="Send">
     </form>
     
     <form action="login.php" method="POST">
