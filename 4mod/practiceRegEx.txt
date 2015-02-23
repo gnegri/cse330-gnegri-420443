@@ -1,0 +1,6 @@
+i said hello world for the first time	RegEx: hello world
+gooey peanut boootter					RegEx: [aeiou]{3}
+AA324									RegEx: AA[0-9]{3,4}
+AA4356
+AA43456
+uf44444
