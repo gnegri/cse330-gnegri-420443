@@ -1,5 +1,13 @@
 #!/usr/bin/python
-import numpy as np, re, ast
+import numpy as np, re, ast, sys, os
+
+if len(sys.argv) != 2:
+	sys.exit("Check command line argument[s]")
+ 
+filename = sys.argv[1]
+ 
+if not os.path.exists(filename):
+	sys.exit("Error: File '%s' not found" % sys.argv[1])
 
 def get_stats(season):
 	f = open(season, 'r')
@@ -23,7 +31,7 @@ def get_stats(season):
 			stats[player_row,1] += hits
 	return players,stats
 
-players,stats = get_stats("/home/gnegri/Dropbox/School/CSE 330/cse330-gnegri-420443/4mod/cardinals-1940.txt")
+players,stats = get_stats(filename)
 
 if len(players) != len(stats):
 	print("Error! Check input and contact the author.")
@@ -33,10 +41,9 @@ res = []
 for i in range(1, len(players)):
 	res.append((players[i],stats[i,1]/stats[i,0]))
 	
-print(res)
 def getKey(key): return key[1]
 res = sorted(res, key=getKey, reverse=True)
-print(res)
+
 for stmt in res:
 	print("%s: %.3f" % (stmt))
 	
