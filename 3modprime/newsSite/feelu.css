@@ -1,0 +1,47 @@
+body {
+    background-color: mintcream;
+    font-family: Helvetica;
+    }
+    
+a {
+    text-decoration: none;
+    color: black;
+    }
+    
+.inline {
+    display: inline;
+    }
+    
+.banner {
+    width: 70%;
+    padding: 15px;
+    font-size: 200%;
+    }
+
+.story {
+    width: 70%;
+    padding: 5px;
+    border: 5px solid black;
+    }
+    
+.story_title {
+    width: 90%;
+    font-size: 125%;
+    display: inline;
+    }
+    
+.story_desc {
+    width: 90%;
+    font-size: 90%
+    }
+
+.replies {
+    width: 70%;
+    padding: 5px;
+    border: 5px solid black;
+    }
+
+.reply {
+    width: 90%;
+    font-size: 90%
+}

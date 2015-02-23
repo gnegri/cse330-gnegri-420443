@@ -1,0 +1,10 @@
+Grant Negri, 420443
+Ian Sekiguchi, 423535
+
+http://ec2-54-165-152-47.compute-1.amazonaws.com/~gnegri/mod3/isekiguchi-gnegri-spring2015-module3group-423535-420433/newsSite/home.php
+
+Creative portion:
+1. Overview of user's post history, separated by stories/comments.
+from this console, the user can access their stories and the stories they commented on.
+
+2. Editing: the old field being updated is given to the user for easy editing.
