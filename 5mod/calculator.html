@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Module 5 Calculator</title>
+
+</head>
+
+<body>
+    <form action="">
+        <p>
+			<label for="a"> A:</label>
+            <input type="number" name="a" id="a" />
+        </p>
+        <p>
+			<label for="b"> B: </label>
+			<input type="number" name="b" id="b" />
+        </p>
+        <p>
+            <input type="radio" name="op" value=1 id="add" />
+            <label for="add"> A + B </label> &nbsp;
+            <input type="radio" name="op" value=2 id="subtract" />
+            <label for="subtract"> A - B </label> &nbsp;
+            <input type="radio" name="op" value=3 id="mult" />
+            <label for="mult"> A * B </label> &nbsp;
+            <input type="radio" name="op" value=4 id="div" />
+            <label for="div"> A / B </label> &nbsp;
+        </p>
+        <p>
+			<label for="result">Answer: </label>
+			<input type="number" id="result" value=0 />
+		</p>
+        <p>
+            <input type="reset" />
+        </p>
+		
+    </form>
+	
+    <script>
+	
+		var btns = ["add","subtract","mult","div","a","b"];
+		
+		document.addEventListener("DOMContentLoaded", function(){
+			for (var i=0; i < btns.length; i++) {
+				document.getElementById(btns[i]).addEventListener("change", function() {
+					var a = document.getElementById("a").value;
+					var b = document.getElementById("b").value;
+					var ops = document.getElementsByName("op");
+					for (var i=0; i < ops.length; i++) {
+						if (ops[i].checked) {var op = ops[i].value; }
+					}
+
+					if(op == 1) { document.getElementById("result").value = a - (0 - b); } 
+					else if (op == 2) { document.getElementById("result").value = a - b; }
+					else if (op == 3) { document.getElementById("result").value = a*b; }
+					else if (op == 4) {
+						if(b==0) { alert("Division by 0 is impossible"); }
+						else { document.getElementById("result").value = a/b; }
+					}
+					
+				}, false);
+			}
+		}, false);
+		
+	</script>
+</body>
+</html>

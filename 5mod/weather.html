@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Weather Widget</title>
+	<link rel="stylesheet" type="text/css" href="./weather.css" />
+	<script>
+		function fetchWeather() {
+			var xmlReq = new XMLHttpRequest();
+			xmlReq.open("GET", "http://classes.engineering.wustl.edu/cse330/content/weather_json.php", true);
+			xmlReq.addEventListener("load", ajaxCallback, false);
+			xmlReq.send(null);
+			
+			function ajaxCallback(event) {
+				var data = JSON.parse(event.target.responseText);
+				
+				var city = data.location.city;		
+				var state = data.location.state;
+				var locHTML = "<strong>";
+					locHTML += city;
+					locHTML += "</strong> ";
+					locHTML += state;
+				
+				var hum = data.atmosphere.humidity;
+					
+				var temp = data.current.temp;
+					
+				var tomCode = data.tomorrow.code;
+				var tomImg = "http://us.yimg.com/i/us/nws/weather/gr/";
+					tomImg += tomCode;
+					tomImg += "ds.png"
+				var tomtomCode = data.dayafter.code;
+				var tomtomImg = "http://us.yimg.com/i/us/nws/weather/gr/";
+					tomtomImg += tomtomCode;
+					tomtomImg += "ds.png"					
+				
+				document.getElementsByClassName("weather-loc")[0].innerHTML = locHTML;
+				document.getElementsByClassName("weather-humidity")[0].innerHTML = hum;
+				document.getElementsByClassName("weather-temp")[0].innerHTML = temp;
+				document.getElementsByClassName("weather-tomorrow")[0].src = tomImg;
+				document.getElementsByClassName("weather-dayaftertomorrow")[0].src = tomtomImg;
+			}
+			
+		}
+		
+		document.addEventListener("DOMContentLoaded", fetchWeather, false);
+	</script>
+</head>
+
+<body>
+
+	<div class="weather" id="weatherWidget">
+		<div class="weather-loc"></div>
+		<div class="weather-humidity"></div>
+		<div class="weather-temp"></div>
+		<img class="weather-tomorrow" src=""/>
+		<img class="weather-dayaftertomorrow" src=""/>
+	</div>
+
+</body>
+</html>
