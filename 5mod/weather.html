@@ -5,13 +5,22 @@
     <title>Weather Widget</title>
 	<link rel="stylesheet" type="text/css" href="./weather.css" />
 	<script>
+		function meFirst() {
+			document.getElementById("refresh").addEventListener("click", refresh, false);
+			fetchWeather();
+		}
 		function fetchWeather() {
 			var xmlReq = new XMLHttpRequest();
 			xmlReq.open("GET", "http://classes.engineering.wustl.edu/cse330/content/weather_json.php", true);
 			xmlReq.addEventListener("load", ajaxCallback, false);
 			xmlReq.send(null);
-			
-			function ajaxCallback(event) {
+		}
+		
+		function refresh(event) {
+			fetchWeather();
+		}
+				
+		function ajaxCallback(event) {
 				var data = JSON.parse(event.target.responseText);
 				
 				var city = data.location.city;		
@@ -39,11 +48,11 @@
 				document.getElementsByClassName("weather-temp")[0].innerHTML = temp;
 				document.getElementsByClassName("weather-tomorrow")[0].src = tomImg;
 				document.getElementsByClassName("weather-dayaftertomorrow")[0].src = tomtomImg;
+
+				
 			}
-			
-		}
 		
-		document.addEventListener("DOMContentLoaded", fetchWeather, false);
+		document.addEventListener("DOMContentLoaded", meFirst, false);
 	</script>
 </head>
 
@@ -56,6 +65,9 @@
 		<img class="weather-tomorrow" src=""/>
 		<img class="weather-dayaftertomorrow" src=""/>
 	</div>
+	<p>
+		<button type="button" id="refresh">Refresh</button>
+	</p>
 
 </body>
 </html>
