@@ -1,0 +1,27 @@
+{
+  "name": "6mod",
+  "version": "1.0.0",
+  "description": "module 6 of CSE 330S at WUSTL",
+  "main": "staticserver.js",
+  "dependencies": {
+    "mime": "^1.3.4"
+  },
+  "dependencies": {
+  	"mime": "~1.3.4",
+  	"socket.io": "~1.0",
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@bitbucket.org:gnegri/cse330-gnegri-420443.git"
+  },
+  "keywords": [
+    "school",
+    "homework",
+    "wustl"
+  ],
+  "author": "grant negri",
+  "license": "ISC"
+}

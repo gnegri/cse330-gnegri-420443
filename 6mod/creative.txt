@@ -1,0 +1,19 @@
+Grant Negri, 420443
+Ben Barnard,
+
+contents are sent, not the actual 
+
+
+Commands:
+Get help: /help
+Join a room: /join <room>
+Join a private room: /join <room> <pass>
+List people in a room: /whois
+Change your name: /name <newname>
+Private message another user: /msg <user> : <message>
+Mod-only:
+Kick a user: /kick <user>
+Ban a user: /ban <user>
+Add a new moderator: /mod <user>
+Set the topic: /topic <topic>
+

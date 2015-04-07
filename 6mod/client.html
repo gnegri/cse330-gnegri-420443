@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html>
+    <head>
+	<title>Worse IRC</title>
+	<meta charset="utf-8" />
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var uname;
+    var token;
+    var room;
+    var joined = false;
+    var recentMessages = [];
+    var indexOfRecentMessages=-1;
+    
+    var socketio = io.connect();
+    socketio.on("sys_msg", function(data) {
+    	if(joined) {
+			document.getElementById("chatlog").appendChild(document.createElement("hr"));
+			var p = document.createElement("b");
+			var msg = document.createTextNode("GLaDOS: ");
+			p.appendChild(msg);
+			p.style.color = "green";
+			document.getElementById("chatlog").appendChild(p);
+			var sp = data['message'].split("\\n");
+			for(var cbr = 0; cbr < sp.length; cbr++){
+				var text = document.createElement("p");
+				text.appendChild(document.createTextNode(sp[cbr]));
+				text.style.color = "green";
+				document.getElementById("chatlog").appendChild(text);
+			}      
+        }
+    });
+  
+    socketio.on("all_msg", function(data) {
+        if(room == data['room'] && joined) {
+            //Append an HR thematic break and the escaped HTML of the new message
+            document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode(data['user']+": "));
+            document.getElementById("chatlog").appendChild(boldName);
+            var text = document.createElement("p");
+            text.appendChild(document.createTextNode(data['message']));
+            document.getElementById("chatlog").appendChild(text);
+         }
+    });
+      
+    socketio.on("pvt_msg", function(data) {
+        if(data['to'] == uname && joined) {
+            //Append an HR thematic break and the escaped HTML of the new message
+            document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("[Private Message] "+data['from']+": "));
+            boldName.style.color = "blue";
+            document.getElementById("chatlog").appendChild(boldName);
+            var text = document.createElement("p");
+            text.appendChild(document.createTextNode(data['message']));
+            text.style.color = "blue";
+            document.getElementById("chatlog").appendChild(text);
+        }
+    });
+    
+     socketio.on("sys_pvt", function(data) {
+     	if(data['target'] == uname && token === data['token'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "green";
+           document.getElementById("chatlog").appendChild(boldName);
+			var sp = data['message'].split("\\n");
+			for(var cbr = 0; cbr < sp.length; cbr++){
+				var text = document.createElement("p");
+				text.appendChild(document.createTextNode(sp[cbr]));
+				text.style.color = "green";
+				document.getElementById("chatlog").appendChild(text);
+			}      
+	    }
+    });
+    
+    socketio.on("alert", function(data) {
+    	if(token === data['token'] && joined) { alert(data['message']); }
+    });
+        
+    socketio.on("list_users", function(data) {
+        if(uname == data['user'] && token === data['token'] && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode(data['room'] + " has users: " + data['users']));
+            document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("list_mods", function(data) {
+        if(uname == data['user'] && token === data['token'] && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode(data['room'] + " has mods: " + data['mods']));
+            document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("list_bans", function(data) {
+        if(uname == data['user'] && token === data['token'] && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode(data['room'] + " has banees: " + data['bans']));
+            document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("list_rooms", function(data) {
+        if(uname == data['user'] && token === data['token'] && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode(data['rooms']));
+            document.getElementById("chatlog").appendChild(p);
+        }
+    
+    });
+    
+    socketio.on("change_name", function(data) {
+        if(token == data['token'] && uname === data['oldname'] && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+		    uname = data['user'];
+		    var oldname = data['oldname'];
+		    var isNew = data['isNew'];
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+		    var p = document.createElement("p");
+		    p.style.color = "green";
+		    p.appendChild(document.createTextNode("Your name has been changed from "+oldname+" to "+uname+". You may change your name at any time by using the /name <username> command. A list of chat commands can be accessed by using /help."));
+		    document.getElementById("chatlog").appendChild(p);
+		    document.getElementById("start").style.display = "none";
+		    document.getElementById("chatlog").style.display = "";
+		    document.getElementById("send").style.display = "";
+        } else if(room == data['room'] && isNew === false && joined) {
+        	document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+        	boldName.appendChild(document.createTextNode("GLaDOS: "));
+       	 	boldName.style.color = "green";
+        	document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.appendChild(document.createTextNode(data['oldname']+" has changed their name to "+data['user']+". You may change your name at any time by using the /name <username> command. A list of chat commands can be accessed by using /help."));
+            p.style.color = "green";
+            document.getElementById("chatlog").appendChild(p);
+        }
+        
+    });
+    
+    socketio.on("new_user", function(data) {
+        if(token === data['token'] && (uname === null || uname === undefined) && !joined) {
+        	uname = data['user'];
+        	joined = true;
+        	socketio.emit("message_to_server", {message:"/join lobby", user:uname, room:room, token:token});
+            document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode("You have joined as "+uname+". You may change your name at any time by using the /name <username> command. A list of chat commands can be accessed by using /help."));
+            document.getElementById("chatlog").appendChild(p);
+            document.getElementById("start").style.display = "none";
+            document.getElementById("chatlog").style.display = "";
+            document.getElementById("inner").style.display = "";
+        } else if(room == data['room'] && joined) {
+            document.getElementById("chatlog").appendChild(document.createElement("hr"));
+            var boldName = document.createElement("b");
+            boldName.appendChild(document.createTextNode("GLaDOS: "));
+            boldName.style.color = "green";
+            document.getElementById("chatlog").appendChild(boldName);
+            var p = document.createElement("p");
+            p.style.color = "green";
+            p.appendChild(document.createTextNode("New user "+data['user']+" has joined "+data['room']+"."));
+            document.getElementById("chatlog").appendChild(p);
+        
+        }
+    });
+    
+    socketio.on("room_joined", function(data) {
+        if(token === data['token'] && uname == data['user'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           room = data['room'];
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "green";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "You have successfully joined "+room+". You may switch rooms at any time by using the /join <room> command. A list of chat commands can be accessed by using /help. The current topic is: "+data['topic'];
+           var p = document.createElement("p");
+           p.style.color = "green";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+           var output = "The current topic is: "+data['topic'];
+           var p1 = document.createElement("p");
+           p1.style.color = "green";
+           p1.appendChild(document.createTextNode(output1));
+           document.getElementById("chatlog").appendChild(p1);
+        } else if(room == data['room']) { 
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "green";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = data['user']+" has joined the room.";
+           var p = document.createElement("p");
+           p.style.color = "green";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("new_room", function(data) {
+        if(token === data['token'] && uname == data['user'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           room = data['room'];
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "green";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = room+" did not exist, so I made it for you, and even made you the moderator."
+           var p = document.createElement("p");
+           p.style.color = "green";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("join_fail", function(data) {
+        if(token === data['token'] && uname == data['user'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           room = data['room'];
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "red";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "You could not connect to "+room+" because "+data['msg'];
+           var p = document.createElement("p");
+           p.style.color = "red";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("topic", function(data) {
+   		if(room == data['room'] && joined) {
+   		   document.getElementById("chatlog").appendChild(document.createElement("hr"));
+   		   var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "green";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "The topic has been changed to: "+data['topic'];
+           var p = document.createElement("p");
+           p.style.color = "green";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+   		}
+    });
+    
+    socketio.on("kick", function(data) {
+    	if(uname == data['user'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           room = "lobby";
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "red";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "You have been ejected from "+data['room']+". Reason: "+data['reason']+".";
+           var p = document.createElement("p");
+           p.style.color = "red";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+       } else if (room == data['room'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "red";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "";
+           	   output += data['user'];
+           	   output += " has been ejected from "+data['room']+". Reason: "+data['reason']+".";
+           var p = document.createElement("p");
+           p.style.color = "red";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+       }
+    });
+    
+    socketio.on("unban", function(data) {
+    	if(uname == data['user'] && joined) {
+    		document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "purple";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "You have been graciously unbanned from "+data['room']+".";
+           var p = document.createElement("p");
+           p.style.color = "purple";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+    	} else if (room == data['room'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "purple";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "";
+           	   output += data['user'];
+           	   output += " has been unbanned.";
+           var p = document.createElement("p");
+           p.style.color = "purple";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    socketio.on("mod", function(data) {
+    	if(uname == data['user'] && joined) {
+    		document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "purple";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "You have been granted moderator privileges in "+data['room']+".";
+           var p = document.createElement("p");
+           p.style.color = "purple";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+    	} else if (room == data['room'] && joined) {
+           document.getElementById("chatlog").appendChild(document.createElement("hr"));
+           var boldName = document.createElement("b");
+           boldName.appendChild(document.createTextNode("GLaDOS: "));
+           boldName.style.color = "purple";
+           document.getElementById("chatlog").appendChild(boldName);
+           var output = "";
+           	   output += data['user'];
+           	   output += " has been granted moderator privileges.";
+           var p = document.createElement("p");
+           p.style.color = "purple";
+           p.appendChild(document.createTextNode(output));
+           document.getElementById("chatlog").appendChild(p);
+        }
+    });
+    
+    function sendMessage(event) {
+        var msg = document.getElementById("message").value;
+        if(msg != "") {
+		    if(msg != recentMessages[0]) { recentMessages.unshift(msg) };
+		    socketio.emit("message_to_server", {user:uname, message:msg, room:room, token:token, login:false});
+		    document.getElementById("message").value = "";
+		}
+    }
+    
+    function nextRecent(event) {
+        if(recentMessages.length > 0) {
+            if(indexOfRecentMessages < recentMessages.length) {
+                indexOfRecentMessages = Math.max(indexOfRecentMessages, 0); //pre-message
+                document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+                indexOfRecentMessages++;
+            } else if(indexOfRecentMessages == recentMessages.length) {
+                document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+            }
+        }
+    }
+    
+    function prevRecent(event) {
+        if(indexOfRecentMessages >= 0) {
+            document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+            indexOfRecentMessages--;
+        } else {
+            document.getElementById("message").value = "";
+        }
+    }
+    
+    function recent(e) {
+    	alert("keypress");
+    	var key = e.which ? e.which : e.keycode;
+    	alert(key);
+    	switch(key) {
+			case 38:
+				if(recentMessages.length > 0) {
+				    if(indexOfRecentMessages < recentMessages.length) {
+				        indexOfRecentMessages = Math.max(indexOfRecentMessages, 0); //pre-message
+				        document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+				        indexOfRecentMessages++;
+				    } else if(indexOfRecentMessages == recentMessages.length) {
+				        document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+				    }
+				}
+				break;
+			case 40:       
+				if(indexOfRecentMessages >= 0) {
+				    document.getElementById("message").value = recentMessages[indexOfRecentMessages];
+				    indexOfRecentMessages--;
+				} else {
+				    document.getElementById("message").value = "";
+				}
+				break;
+			default:
+    	}
+    	e.preventDefault();
+    }
+    
+    function setName(event) {
+        var user = document.getElementById("newname").value;
+        var send = "/name "+user;
+        token = Math.random();
+        socketio.emit("message_to_server", {message:send, user:user, room:room, token:token, login:true});
+    }
+      
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById("joinbtn").addEventListener("click", setName, false);
+        document.getElementById("send").addEventListener("click", sendMessage, false);
+        //document.getElementById("message").addEventListener("onkeydown", recent, false);
+        //document.getElementById("message").addEventListener("onkeydown", nextRecent, false);
+        //document.getElementById("message").addEventListener("onkeydown", prevRecent, false);
+    }, false);
+    
+    
+ 
+    </script>
+    </head>
+    <body>
+        <div id="start" style="display:">
+            <button id="joinbtn">Sign In</button>
+            <input type="text" id="newname"/>
+        </div>
+                
+        <div id="inner" style="display:none; float:top; position:fixed" >
+            <button id="send">Send Message</button>
+            <span><input type="text" id="message" /></span>
+        </div>
+        <br>
+        <div id="chatlog" style="display:none"></div>
+
+
+        
+    </body>
+</html>

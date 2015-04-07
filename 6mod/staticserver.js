@@ -37,7 +37,7 @@ var app = http.createServer(function(req, resp){
 			resp.writeHead(404, {
 				"Content-Type": "text/plain"
 			});
-			resp.write("Requested file not found: "+filename);
+			resp.write("Error 404: Content Not Found");
 			resp.end();
 			return;
 		}
